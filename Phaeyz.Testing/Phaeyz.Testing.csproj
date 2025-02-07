@@ -6,4 +6,21 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageId>Phaeyz.Testing</PackageId>
+    <Authors>Phaeyz</Authors>
+    <Company>Phaeyz</Company>
+    <Product>Phaeyz</Product>
+    <Description>Phaeyz.Testing</Description>
+    <Copyright>Copyright © Phaeyz 2025</Copyright>
+    <RepositoryUrl>https://github.com/Phaeyz/Testing</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MinVer" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
 </Project>
