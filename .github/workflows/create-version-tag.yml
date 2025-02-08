@@ -4,7 +4,6 @@ on:
   workflow_call:
     inputs:
       checkout-repo:
-        required: true
         type: boolean
         default: true
       breaking_change:

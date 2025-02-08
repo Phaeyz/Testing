@@ -4,15 +4,12 @@ on:
   workflow_call:
     inputs:
       checkout-repo:
-        required: true
         type: boolean
         default: true
       dotnet-version:
-        required: true
         type: string
         default: '9.0.x'
       publish-output:
-        required: true
         type: string
         default: './publish'
       package-name:
