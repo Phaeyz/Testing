@@ -8,11 +8,8 @@ on:
     branches:
       - main
 
-env:
-  PACKAGE_NAME: Phaeyz.Testing
-
 jobs:
   build:
     uses: ./.github/workflows/build-steps.yml
     with:
-      package-name: ${{ env.PACKAGE_NAME }}
+      package-name: 'Phaeyz.Testing'

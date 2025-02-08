@@ -12,9 +12,6 @@ on:
         required: true
         type: boolean
 
-env:
-  PACKAGE_NAME: Phaeyz.Testing
-
 jobs:
   versioning:
     uses: ./.github/workflows/create-version-tag.yml
@@ -26,7 +23,7 @@ jobs:
     needs: versioning
     uses: ./.github/workflows/build-steps.yml
     with:
-      package-name: ${{ env.PACKAGE_NAME }}
+      package-name: 'Phaeyz.Testing'
 
   release:
     needs: [versioning, build]
@@ -36,7 +33,7 @@ jobs:
     - name: Download Artifact
       uses: actions/download-artifact@v4
       with:
-        name: ${{ env.PACKAGE_NAME }}
+        name: 'Phaeyz.Testing'
         path: ./publish
 
     - name: Create GitHub Release
