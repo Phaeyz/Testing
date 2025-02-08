@@ -1,0 +1,63 @@
+name: Create Version Tag
+
+on:
+  workflow_call:
+    inputs:
+      checkout-repo:
+        required: true
+        type: boolean
+        default: true
+      breaking_change:
+        required: true
+        type: boolean
+      new_feature:
+        required: true
+        type: boolean
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    outputs:
+      new_tag: ${{ steps.new_version.outputs.NEW_TAG }}
+
+    steps:
+    - name: Checkout Repository
+      if: ${{ inputs.checkout-repo }}
+      uses: actions/checkout@v4
+
+    - name: Determine New Version
+      id: new_version
+      run: |
+        git fetch --tags
+        LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1` || echo "0.0.0")
+        echo "Latest tag: $LATEST_TAG"
+        VERSION_PARTS=(${LATEST_TAG//./ })
+        MAJOR=${VERSION_PARTS[0]}
+        MINOR=${VERSION_PARTS[1]}
+        PATCH=${VERSION_PARTS[2]}
+    
+        if [ "${{ github.event.inputs.breaking_change }}" == "true" ]; then
+          MAJOR=$((MAJOR + 1))
+          MINOR=0
+          PATCH=0
+        elif [ "${{ github.event.inputs.new_feature }}" == "true" ]; then
+          MINOR=$((MINOR + 1))
+          PATCH=0
+        else
+          PATCH=$((PATCH + 1))
+        fi
+    
+        NEW_TAG="$MAJOR.$MINOR.$PATCH"
+        echo "New tag: $NEW_TAG"
+        echo "::set-output name=NEW_TAG::$NEW_TAG"
+
+    - name: Create Git Tag
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        NEW_TAG=${{ steps.new_version.outputs.NEW_TAG }}
+        git config --global user.name "Phaeyz"
+        git config --global user.email "phaeyz@pm.me"
+        git tag $NEW_TAG
+        git push origin $NEW_TAG

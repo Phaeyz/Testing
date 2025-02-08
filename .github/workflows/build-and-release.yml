@@ -1,0 +1,47 @@
+name: Build and Release Phaeyz.Testing
+
+on:
+  workflow_dispatch:
+    inputs:
+      breaking_change:
+        description: 'Is this an improvement with breaking changes?'
+        required: true
+        type: boolean
+      new_feature:
+        description: 'Does this add new features?'
+        required: true
+        type: boolean
+
+env:
+  PACKAGE_NAME: Phaeyz.Testing
+
+jobs:
+  versioning:
+    uses: ./.github/workflows/create-version-tag.yml
+    with:
+      breaking_change: ${{ github.event.inputs.breaking_change }}
+      new_feature: ${{ github.event.inputs.new_feature }}
+
+  build:
+    needs: versioning
+    uses: ./.github/workflows/build-steps.yml
+    with:
+      package-name: ${{ env.PACKAGE_NAME }}
+
+  release:
+    needs: [versioning, build]
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ env.PACKAGE_NAME }}
+        path: ./publish
+
+    - name: Create GitHub Release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        NEW_TAG=${{ needs.versioning.outputs.new_tag }}
+        gh release create $NEW_TAG --title "Release $NEW_TAG" ./publish/*
