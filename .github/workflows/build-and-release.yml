@@ -3,25 +3,25 @@ name: Build and Release Phaeyz.Testing
 on:
   workflow_dispatch:
     inputs:
-      breaking_change:
+      breaking-change:
         description: 'Is this an improvement with breaking changes?'
         required: true
         type: boolean
-      new_feature:
+      new-feature:
         description: 'Does this add new features?'
         required: true
         type: boolean
 
 jobs:
   versioning:
-    uses: ./.github/workflows/create-version-tag.yml
+    uses: ./.github/workflows/lib-create-version-tag.yml
     with:
-      breaking_change: ${{ github.event.inputs.breaking_change }}
-      new_feature: ${{ github.event.inputs.new_feature }}
+      breaking_change: ${{ github.event.inputs.breaking-change == 'true' }}
+      new_feature: ${{ github.event.inputs.new-feature == 'true' }}
 
   build:
     needs: versioning
-    uses: ./.github/workflows/build-steps.yml
+    uses: ./.github/workflows/lib-build.yml
     with:
       package-name: 'Phaeyz.Testing'
 

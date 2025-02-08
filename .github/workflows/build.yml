@@ -10,6 +10,6 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/build-steps.yml
+    uses: ./.github/workflows/lib-build.yml
     with:
       package-name: 'Phaeyz.Testing'
