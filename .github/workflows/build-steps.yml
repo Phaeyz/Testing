@@ -1,0 +1,49 @@
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      checkout-repo:
+        type: boolean
+        default: true
+      dotnet-version:
+        type: string
+        default: '9.0.x'
+      publish-output:
+        type: string
+        default: './publish'
+      package-name:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      if: ${{ inputs.checkout-repo }}
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+
+    - name: Install Dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore
+
+    - name: Test
+      run: dotnet test --no-restore
+
+    - name: Publish
+      run: dotnet publish --no-restore --output ${{ inputs.publish-output }} ./${{ inputs.package-name }}
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.package-name }}
+        path: ${{ inputs.publish-output }}
