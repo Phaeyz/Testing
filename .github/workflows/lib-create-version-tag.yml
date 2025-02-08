@@ -13,6 +13,9 @@ on:
         required: true
         type: boolean
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -36,20 +39,14 @@ jobs:
         MINOR=${VERSION_PARTS[1]}
         PATCH=${VERSION_PARTS[2]}
 
-        echo "breaking-change: ~${{ github.event.inputs.breaking-change }}~, ~${{ github.event.inputs.breaking-change == 'true' }}~"
-        echo "new-feature: ~${{ github.event.inputs.new-feature }}~, ~${{ github.event.inputs.new-feature == 'true' }}~"
-    
         if [ "${{ github.event.inputs['breaking-change'] }}" == "true" ]; then
-          echo "INCREMENTING MAJOR"
           MAJOR=$((MAJOR + 1))
           MINOR=0
           PATCH=0
         elif [ "${{ github.event.inputs['new-feature'] }}" == "true" ]; then
-          echo "INCREMENTING MINOR"
           MINOR=$((MINOR + 1))
           PATCH=0
         else
-          echo "INCREMENTING PATCH"
           PATCH=$((PATCH + 1))
         fi
     
