@@ -25,6 +25,12 @@ jobs:
       if: ${{ inputs.checkout-repo }}
       uses: actions/checkout@v4
 
+    - name: Print Derived Version
+      run: |
+        git fetch --tags
+        LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1` || echo "0.0.0")
+        echo "Latest tag: $LATEST_TAG"
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
