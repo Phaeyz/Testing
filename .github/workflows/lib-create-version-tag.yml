@@ -31,11 +31,12 @@ jobs:
     - name: Checkout Repository
       if: ${{ inputs.checkout-repo }}
       uses: actions/checkout@v4
+      with:
+        fetch-tags: true
 
     - name: Determine New Version
       id: new_version
       run: |
-        git fetch --tags
         LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1` || echo "0.0.0")
         echo "Latest tag: $LATEST_TAG"
         VERSION_PARTS=(${LATEST_TAG//./ })
