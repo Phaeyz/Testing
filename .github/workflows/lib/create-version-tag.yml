@@ -6,10 +6,10 @@ on:
       checkout-repo:
         type: boolean
         default: true
-      breaking_change:
+      breaking-change:
         required: true
         type: boolean
-      new_feature:
+      new-feature:
         required: true
         type: boolean
 
@@ -22,7 +22,7 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      if: ${{ inputs.checkout-repo }}
+      if: ${{ inputs.checkout-repo == 'true' }}
       uses: actions/checkout@v4
 
     - name: Determine New Version
@@ -36,11 +36,11 @@ jobs:
         MINOR=${VERSION_PARTS[1]}
         PATCH=${VERSION_PARTS[2]}
     
-        if [ "${{ github.event.inputs.breaking_change }}" == "true" ]; then
+        if [ ${{ github.event.inputs.breaking-change == 'true' }} ]; then
           MAJOR=$((MAJOR + 1))
           MINOR=0
           PATCH=0
-        elif [ "${{ github.event.inputs.new_feature }}" == "true" ]; then
+        elif [ ${{ github.event.inputs.new-feature == 'true' }} ]; then
           MINOR=$((MINOR + 1))
           PATCH=0
         else

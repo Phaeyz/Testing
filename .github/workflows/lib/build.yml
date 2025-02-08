@@ -22,7 +22,7 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      if: ${{ inputs.checkout-repo }}
+      if: ${{ inputs.checkout-repo == 'true' }}
       uses: actions/checkout@v4
 
     - name: Setup .NET
