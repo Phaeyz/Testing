@@ -39,12 +39,12 @@ jobs:
         echo "breaking-change: ~${{ github.event.inputs.breaking-change }}~, ~${{ github.event.inputs.breaking-change == 'true' }}~"
         echo "new-feature: ~${{ github.event.inputs.new-feature }}~, ~${{ github.event.inputs.new-feature == 'true' }}~"
     
-        if [ ${{ github.event.inputs.breaking-change == 'true' }} ]; then
+        if [ "${{ github.event.inputs['breaking-change'] }}" == "true" ]; then
           echo "INCREMENTING MAJOR"
           MAJOR=$((MAJOR + 1))
           MINOR=0
           PATCH=0
-        elif [ ${{ github.event.inputs.new-feature == 'true' }} ]; then
+        elif [ "${{ github.event.inputs['new-feature'] }}" == "true" ]; then
           echo "INCREMENTING MINOR"
           MINOR=$((MINOR + 1))
           PATCH=0
@@ -55,7 +55,7 @@ jobs:
     
         NEW_TAG="$MAJOR.$MINOR.$PATCH"
         echo "New tag: $NEW_TAG"
-        echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+        echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
 
     - name: Create Git Tag
       env:
