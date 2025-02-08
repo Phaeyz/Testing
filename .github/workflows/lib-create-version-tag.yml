@@ -12,6 +12,10 @@ on:
       new-feature:
         required: true
         type: boolean
+    outputs:
+      new_tag:
+        description: 'The created version tag.'
+        value: ${{ jobs.build.outputs.new_tag }}
 
 permissions:
   contents: write
