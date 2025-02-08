@@ -24,8 +24,6 @@ jobs:
     - name: Checkout Repository
       if: ${{ inputs.checkout-repo }}
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
 
     - name: Print Derived Version
       run: |
