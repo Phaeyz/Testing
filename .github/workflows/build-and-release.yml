@@ -32,6 +32,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
     - name: Download Artifact
       uses: actions/download-artifact@v4
       with:
@@ -41,7 +44,6 @@ jobs:
     - name: Create GitHub Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NEW_TAG: ${{ needs.versioning.outputs.new_tag }}
       run: |
-        echo "NEW_TAG is: $NEW_TAG"
+        NEW_TAG=${{ needs.versioning.outputs.new_tag }}
         gh release create $NEW_TAG --title "Release $NEW_TAG" ./publish/*
