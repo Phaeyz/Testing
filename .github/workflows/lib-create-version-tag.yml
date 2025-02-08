@@ -3,9 +3,6 @@ name: ~Lib~ Create Version Tag
 on:
   workflow_call:
     inputs:
-      checkout-repo:
-        type: boolean
-        default: true
       breaking-change:
         required: true
         type: boolean
@@ -29,13 +26,14 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      if: ${{ inputs.checkout-repo }}
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        filter: tree:0
 
     - name: Determine New Version
       id: new_version
       run: |
-        git fetch --tags
         LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1` || echo "0.0.0")
         echo "Latest tag: $LATEST_TAG"
         VERSION_PARTS=(${LATEST_TAG//./ })
