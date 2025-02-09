@@ -61,7 +61,7 @@ jobs:
           for VERSION_TAG in $VERSION_TAGS; do
             echo "E SKIP=$SKIP COMMIT=$COMMIT VERSION_TAG=$VERSION_TAG"
             # Compare current tag with highest tag
-            if [ "$(printf '%s\n' "HIGHEST_VERSION_TAG" "$VERSION_TAG" | sort -V | tail -n1)" = "$VERSION_TAG" ]; then
+            if [ "$(printf '%s\n' "$HIGHEST_VERSION_TAG" "$VERSION_TAG" | sort -V | tail -n1)" = "$VERSION_TAG" ]; then
               HIGHEST_VERSION_TAG="$VERSION_TAG"
               echo "F SKIP=$SKIP COMMIT=$COMMIT VERSION_TAG=$VERSION_TAG HIGHEST_VERSION_TAG=$HIGHEST_VERSION_TAG"
             fi
