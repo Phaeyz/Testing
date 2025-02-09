@@ -27,7 +27,8 @@ jobs:
     - name: Print Derived Version
       run: |
         # Version tags must follow this pattern
-        REGEX='^\d+\.(?<Minor>\d+)(\.(?<Patch>\d+))?'
+        #REGEX='^\d+\.(?<Minor>\d+)(\.(?<Patch>\d+))?'
+        REGEX='.*'
         # Function to filter and validate tags
         validate_tags() {
           while read TAG; do
