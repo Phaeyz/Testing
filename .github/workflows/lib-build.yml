@@ -72,7 +72,7 @@ jobs:
       id: compute_version
       run: minver
       env:
-        MinVerVerbosity: diagnostic
+        MinVerVerbosity: info
 
     - name: Display Computed Version
       run: echo "Computed version is ${{ steps.compute_version.outputs.version }}"
