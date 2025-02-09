@@ -17,6 +17,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      MinVerVerbosity: diagnostic
+
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
