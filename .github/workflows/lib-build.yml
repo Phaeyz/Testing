@@ -35,8 +35,8 @@ jobs:
     - name: Compute Version
       id: compute_version
       run: |
-        breaking-change: true
-        new-feature: false
+        breaking-change=true
+        new-feature=false
         if [ "$breaking-change" == "true" ]; then
           version=$(minver -v info -a major | tail -n 1)
         elif [ "$new-feature" == "true" ]; then
