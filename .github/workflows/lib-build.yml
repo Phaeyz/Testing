@@ -41,6 +41,7 @@ jobs:
         while true; do
           COMMIT=$(git rev-list --tags --skip=$SKIP --max-count=1)
           if [ -z "$COMMIT" ]; then
+            echo "A SKIP=$SKIP"
             break
           fi
           VERSION_TAGS=$(git tag --contains $COMMIT | validate_tags)
@@ -57,6 +58,7 @@ jobs:
             # Compare current tag with highest tag
             if [ "$(printf '%s\n' "HIGHEST_VERSION_TAG" "$VERSION_TAG" | sort -V | tail -n1)" = "$VERSION_TAG" ]; then
               HIGHEST_VERSION_TAG="$VERSION_TAG"
+              echo "F SKIP=$SKIP COMMIT=$COMMIT VERSION_TAG=$VERSION_TAG HIGHEST_VERSION_TAG=$HIGHEST_VERSION_TAG"
             fi
           done
         fi
