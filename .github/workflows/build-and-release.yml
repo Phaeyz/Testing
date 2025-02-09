@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       breaking-change:
-        description: 'Is this an improvement with breaking changes?'
+        description: 'Has Breaking Change'
         required: true
         type: boolean
       new-feature:
-        description: 'Does this add new features?'
+        description: 'Has New Feature'
         required: true
         type: boolean
 

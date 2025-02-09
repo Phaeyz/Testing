@@ -3,9 +3,6 @@ name: ~Lib~ Create Version Tag
 on:
   workflow_call:
     inputs:
-      checkout-repo:
-        type: boolean
-        default: true
       breaking-change:
         required: true
         type: boolean
@@ -13,57 +10,55 @@ on:
         required: true
         type: boolean
     outputs:
-      new_tag:
+      version:
         description: 'The created version tag.'
-        value: ${{ jobs.build.outputs.new_tag }}
+        value: ${{ jobs.create-version-tag.outputs.version }}
 
 permissions:
   contents: write
 
 jobs:
-  build:
+  create-version-tag:
     runs-on: ubuntu-latest
 
     outputs:
-      new_tag: ${{ steps.new_version.outputs.NEW_TAG }}
+      version: ${{ steps.compute_version.outputs.version }}
 
     steps:
     - name: Checkout Repository
-      if: ${{ inputs.checkout-repo }}
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        filter: tree:0
 
-    - name: Determine New Version
-      id: new_version
+    - name: Install MinVer CLI
+      run: dotnet tool install --global minver-cli
+
+    - name: Compute Version
+      id: compute_version
       run: |
-        git fetch --tags
-        LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1` || echo "0.0.0")
-        echo "Latest tag: $LATEST_TAG"
-        VERSION_PARTS=(${LATEST_TAG//./ })
-        MAJOR=${VERSION_PARTS[0]}
-        MINOR=${VERSION_PARTS[1]}
-        PATCH=${VERSION_PARTS[2]}
-
-        if [ "${{ github.event.inputs['breaking-change'] }}" == "true" ]; then
-          MAJOR=$((MAJOR + 1))
-          MINOR=0
-          PATCH=0
-        elif [ "${{ github.event.inputs['new-feature'] }}" == "true" ]; then
-          MINOR=$((MINOR + 1))
-          PATCH=0
+        if [ "$breaking-change" == "true" ]; then
+          version=$(minver -v info -a major | tail -n 1)
+        elif [ "$new-feature" == "true" ]; then
+          version=$(minver -v info -a minor | tail -n 1)
         else
-          PATCH=$((PATCH + 1))
+          version=$(minver -v info | tail -n 1)
         fi
-    
-        NEW_TAG="$MAJOR.$MINOR.$PATCH"
-        echo "New tag: $NEW_TAG"
-        echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
+        REGEX='^[0-9]+\.[0-9]+(\.[0-9]+)?'
+        if [[ $version =~ $REGEX ]]; then
+          version="${BASH_REMATCH[0]}"
+        else
+          version="0.0.0"
+        fi
+        echo "Computed version: $version"
+        echo "version=$version" >> $GITHUB_OUTPUT
 
     - name: Create Git Tag
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        NEW_TAG=${{ steps.new_version.outputs.NEW_TAG }}
+        version=${{ steps.compute_version.outputs.version }}
         git config --global user.name "Phaeyz"
         git config --global user.email "phaeyz@pm.me"
-        git tag $NEW_TAG
-        git push origin $NEW_TAG
+        git tag $version
+        git push origin $version
