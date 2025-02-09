@@ -46,6 +46,7 @@ jobs:
           fi
           echo "B SKIP=$SKIP COMMIT=$COMMIT"
           VERSION_TAGS=$(git tag --contains $COMMIT | validate_tags)
+          echo "B2 SKIP=$SKIP COMMIT=$COMMIT VERSION_TAGS=$VERSION_TAGS"
           if [ -n "$VERSION_TAGS" ]; then
             echo "C SKIP=$SKIP COMMIT=$COMMIT"
             break
