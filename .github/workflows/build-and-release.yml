@@ -47,5 +47,5 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        NEW_TAG=${{ needs.versioning.outputs.new_tag }}
-        gh release create $NEW_TAG --title "Release $NEW_TAG" ./publish/*
+        version=${{ needs.versioning.outputs.version }}
+        gh release create $version --title "Release $version" ./publish/*
