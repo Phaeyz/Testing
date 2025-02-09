@@ -26,8 +26,41 @@ jobs:
 
     - name: Print Derived Version
       run: |
-        LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1` || echo "0.0.0")
-        echo "Latest tag: $LATEST_TAG"
+        # Version tags must follow this pattern
+        REGEX='^\d+\.(?<Minor>\d+)(\.(?<Patch>\d+))?'
+        # Function to filter and validate tags
+        validate_tags() {
+          while read TAG; do
+            if [[ $TAG =~ $REGEX ]]; then
+              echo $TAG
+            fi
+          done
+        }
+        # Find the most recent commit with tags and iterate until a valid version tag is found
+        SKIP=0
+        while true; do
+          COMMIT=$(git rev-list --tags --skip=$SKIP --max-count=1)
+          if [ -z "$COMMIT" ]; then
+            break
+          fi
+          VERSION_TAGS=$(git tag --contains $COMMIT | validate_tags)
+          if [ -n "$VERSION_TAGS" ]; then
+            break
+          fi
+          SKIP=$((SKIP + 1))
+        done
+        # Ensure TAGS is defined before processing
+        HIGHEST_VERSION_TAG="0.0.0"
+        if [ -n "$VERSION_TAGS" ]; then
+          # Find the highest version tag
+          for VERSION_TAG in $VERSION_TAGS; do
+            # Compare current tag with highest tag
+            if [ "$(printf '%s\n' "HIGHEST_VERSION_TAG" "$VERSION_TAG" | sort -V | tail -n1)" = "$VERSION_TAG" ]; then
+              HIGHEST_VERSION_TAG="$VERSION_TAG"
+            fi
+          done
+        fi
+        echo "Highest tag: $HIGHEST_VERSION_TAG"
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
