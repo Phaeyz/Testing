@@ -45,9 +45,7 @@ jobs:
           version=$(minver -v info | tail -n 1)
         fi
         REGEX='^[0-9]+\.[0-9]+(\.[0-9]+)?'
-        if [[ ! $version =~ $REGEX ]]; then
-          version=0.0.0
-        fi
+        [[ $version =~ $REGEX ]] || version="0.0.0"
         echo "Computed version: $version"
         echo "version=$version" >> $GITHUB_OUTPUT
 
