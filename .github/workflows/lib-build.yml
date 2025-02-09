@@ -43,24 +43,24 @@ jobs:
           if [ -z "$COMMIT" ]; then
             break
           fi
-          VERSION_TAGS=$(git tag --contains $COMMIT | validate_tags)
-          if [ -n "$VERSION_TAGS" ]; then
+          VERSIONS=$(git tag --contains $COMMIT | validate_tags)
+          if [ -n "$VERSIONS" ]; then
             break
           fi
           SKIP=$((SKIP + 1))
         done
-        # Ensure TAGS is defined before processing
-        HIGHEST_VERSION_TAG="0.0.0"
-        if [ -n "$VERSION_TAGS" ]; then
-          # Find the highest version tag
-          for VERSION_TAG in $VERSION_TAGS; do
-            # Compare current tag with highest tag
-            if [ "$(printf '%s\n' "$HIGHEST_VERSION_TAG" "$VERSION_TAG" | sort -V | tail -n1)" = "$VERSION_TAG" ]; then
-              HIGHEST_VERSION_TAG="$VERSION_TAG"
+        # Ensure VERSIONS is defined before processing
+        HIGHEST_VERSION="0.0.0"
+        if [ -n "$VERSIONS" ]; then
+          # Find the highest version
+          for VERSION in $VERSIONS; do
+            # Compare current version with highest version
+            if [ "$(printf '%s\n' "$HIGHEST_VERSION" "$VERSION" | sort -V | tail -n1)" = "$VERSION" ]; then
+              HIGHEST_VERSION="$VERSION"
             fi
           done
         fi
-        echo "Highest tag: $HIGHEST_VERSION_TAG"
+        echo "Highest version: $HIGHEST_VERSION"
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
