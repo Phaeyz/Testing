@@ -17,53 +17,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      MinVerVerbosity: normal
-
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
         filter: tree:0
-
-    - name: Print Derived Version
-      run: |
-        # Version tags must follow this pattern
-        REGEX='^[0-9]+\.[0-9]+(\.[0-9]+)?'
-        # Function to filter and validate tags
-        validate_tags() {
-          while read TAG; do
-            if [[ $TAG =~ $REGEX ]]; then
-              echo $TAG
-            fi
-          done
-        }
-        # Find the most recent commit with tags and iterate until a valid version tag is found
-        SKIP=0
-        while true; do
-          COMMIT=$(git rev-list --tags --skip=$SKIP --max-count=1)
-          if [ -z "$COMMIT" ]; then
-            break
-          fi
-          VERSIONS=$(git tag --contains $COMMIT | validate_tags)
-          if [ -n "$VERSIONS" ]; then
-            break
-          fi
-          SKIP=$((SKIP + 1))
-        done
-        # Ensure VERSIONS is defined before processing
-        HIGHEST_VERSION="0.0.0"
-        if [ -n "$VERSIONS" ]; then
-          # Find the highest version
-          for VERSION in $VERSIONS; do
-            # Compare current version with highest version
-            if [ "$(printf '%s\n' "$HIGHEST_VERSION" "$VERSION" | sort -V | tail -n1)" = "$VERSION" ]; then
-              HIGHEST_VERSION="$VERSION"
-            fi
-          done
-        fi
-        echo "Highest version: $HIGHEST_VERSION"
 
     - name: Install MinVer CLI
       run: dotnet tool install --global minver-cli
@@ -76,11 +35,17 @@ jobs:
     - name: Compute Version
       id: compute_version
       run: |
-        version=$(minver -v info | tail -n 1)
+        breaking-change: true
+        new-feature: false
+        if [ "$breaking-change" == "true" ]; then
+          version=$(minver -v info -a major | tail -n 1)
+        elif [ "$new-feature" == "true" ]; then
+          version=$(minver -v info -a minor | tail -n 1)
+        else
+          version=$(minver -v info | tail -n 1)
+        fi
         echo "Computed version: $version"
         echo "version=$version" >> $GITHUB_OUTPUT
-      env:
-        MinVerVerbosity: info
 
     - name: Display Computed Version
       run: echo "Computed version is ${{ steps.compute_version.outputs.version }}"
@@ -95,6 +60,8 @@ jobs:
 
     - name: Build
       run: dotnet build --no-restore
+      env:
+        MinVerVerbosity: normal
 
     - name: Test
       run: dotnet test --no-restore
