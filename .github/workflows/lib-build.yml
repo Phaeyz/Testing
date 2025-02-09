@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      MinVerVerbosity: diagnostic
+      MinVerVerbosity: minimal
 
     steps:
     - name: Checkout Repository
