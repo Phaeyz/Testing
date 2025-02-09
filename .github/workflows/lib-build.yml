@@ -65,6 +65,18 @@ jobs:
         fi
         echo "Highest version: $HIGHEST_VERSION"
 
+    - name: Install MinVer CLI
+      run: dotnet tool install --global minver-cli
+
+    - name: Compute Version
+      id: compute_version
+      run: minver
+      env:
+        MinVerVerbosity: diagnostic
+
+    - name: Display Computed Version
+      run: echo "Computed version is ${{ steps.compute_version.outputs.version }}"
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
