@@ -68,6 +68,12 @@ jobs:
     - name: Install MinVer CLI
       run: dotnet tool install --global minver-cli
 
+    - name: MinVer Help
+      id: compute_version
+      run: minver --help
+      env:
+        MinVerVerbosity: info
+
     - name: Compute Version
       id: compute_version
       run: minver
