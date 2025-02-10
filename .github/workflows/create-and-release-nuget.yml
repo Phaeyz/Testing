@@ -29,3 +29,4 @@ jobs:
       with:
         breaking-change: ${{ inputs.breaking-change }}
         new-feature: ${{ inputs.new-feature }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}

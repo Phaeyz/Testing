@@ -7,6 +7,9 @@ inputs:
   new-feature:
     description: 'Has New Feature'
     required: true
+  github-token:
+    description: 'GitHub Token'
+    required: true
 runs:
   using: "composite"
   steps:
@@ -29,7 +32,7 @@ runs:
       MinVerVerbosity: normal
   - name: Create GitHub Release
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ inputs.github-token }}
     shell: bash
     run: |
       version=${{ steps.compute_version.outputs.version }}
