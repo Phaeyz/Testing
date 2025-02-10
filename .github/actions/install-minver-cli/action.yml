@@ -1,0 +1,11 @@
+name: Install MinVer CLI
+description: Installs MinVer CLI (if not already installed).
+runs:
+  using: "composite"
+  steps:
+    - name: Install MinVer CLI
+      shell: bash
+      run: |
+        if ! dotnet tool list -g | grep -q minver-cli; then
+          dotnet tool install --global minver-cli
+        fi
