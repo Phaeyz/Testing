@@ -25,6 +25,7 @@ runs:
     uses: ./.github/actions/create-tag
     with:
       tag: ${{ steps.compute_version.outputs.version }}
+      github-token: ${{ inputs.github-token }}
   - name: Create NuGet Package
     shell: bash
     run: dotnet pack --no-restore --configuration Release --output ./nuget-output -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
