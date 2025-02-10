@@ -1,0 +1,20 @@
+# This action requires write permission
+name: Create Tag
+description: Creates a version tag at the current commit.
+inputs:
+  tag:
+    description: 'Tag to Create'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Create Tag
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      shell: bash
+      run: |
+        version=${{ inputs.tag }}
+        git config --global user.name "Phaeyz"
+        git config --global user.email "phaeyz@pm.me"
+        git tag $version
+        git push origin $version
