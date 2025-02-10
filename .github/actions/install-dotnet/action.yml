@@ -12,7 +12,9 @@ runs:
       id: check_dotnet
       shell: bash
       run: |
-        if dotnet --list-sdks | grep -E "^${{ inputs.dotnet-version%.x}}"; then
+        desired_version="${{ inputs.dotnet-version }}"
+        desired_version_without_prefix="${desired_version%.x}"
+        if dotnet --list-sdks | grep -E "^$desired_version_without_prefix"; then
           echo "dotnet_installed=true" >> $GITHUB_OUTPUT
         else
           echo "dotnet_installed=false" >> $GITHUB_OUTPUT
