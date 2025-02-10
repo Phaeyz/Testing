@@ -5,12 +5,15 @@ inputs:
   tag:
     description: 'Tag to Create'
     required: true
+  github-token:
+    description: 'GitHub Token'
+    required: true
 runs:
   using: "composite"
   steps:
     - name: Create Tag
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
       shell: bash
       run: |
         version=${{ inputs.tag }}
