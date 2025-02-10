@@ -16,7 +16,6 @@ runs:
   steps:
     - name: Install MinVer CLI
       uses: ./.github/actions/install-minver-cli
-
     - name: Compute Version
       id: compute_version
       shell: bash
