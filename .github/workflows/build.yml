@@ -11,5 +11,3 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/lib-build-and-test.yml
-    with:
-      package-name: 'Phaeyz.Testing'
