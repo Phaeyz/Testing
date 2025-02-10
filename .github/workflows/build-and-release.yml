@@ -13,39 +13,21 @@ on:
         type: boolean
 
 jobs:
-  versioning:
+  build-and-test:
+    uses: ./.github/workflows/lib-build-and-test.yml
+    with:
+      package-name: 'Phaeyz.Testing'
+
+  create-version-tag:
+    needs: build-and-test
     uses: ./.github/workflows/lib-create-version-tag.yml
-    permissions:
-      contents: write
     with:
       breaking-change: ${{ github.event.inputs.breaking-change == 'true' }}
       new-feature: ${{ github.event.inputs.new-feature == 'true' }}
 
-  build:
-    needs: versioning
-    uses: ./.github/workflows/lib-build.yml
+  create-and-release-nuget:
+    needs: create-version-tag
+    uses: ./.github/workflows/lib-create-and-release-nuget.yml
     with:
       package-name: 'Phaeyz.Testing'
-
-  release:
-    needs: [versioning, build]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-
-    - name: Download Artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: 'Phaeyz.Testing'
-        path: ./publish
-
-    - name: Create GitHub Release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        version=${{ needs.versioning.outputs.version }}
-        gh release create $version --title "Release $version" ./publish/*
+      version: ${{ needs.create-version-tag.outputs.version }}

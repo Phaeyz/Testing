@@ -1,4 +1,4 @@
-name: ~Lib~ Build
+name: ~Lib~ Create and Release NuGet
 
 on:
   workflow_call:
@@ -6,15 +6,18 @@ on:
       dotnet-version:
         type: string
         default: '9.0.x'
-      publish-output:
-        type: string
-        default: './publish'
       package-name:
         required: true
         type: string
+      version:
+        required: true
+        type: string
+
+permissions:
+  contents: write
 
 jobs:
-  build:
+  create-and-release-nuget:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,19 +35,13 @@ jobs:
     - name: Install Dependencies
       run: dotnet restore
 
-    - name: Build
-      run: dotnet build --no-restore
+    - name: Create NuGet Package
+      run: dotnet pack --no-restore --configuration Release --output ./nuget-output -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
       env:
         MinVerVerbosity: normal
 
-    - name: Test
-      run: dotnet test --no-restore
-
-    - name: Publish
-      run: dotnet publish --no-restore --output ${{ inputs.publish-output }} ./${{ inputs.package-name }}
-
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ inputs.package-name }}
-        path: ${{ inputs.publish-output }}
+    - name: Create GitHub Release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh release create $version --title "Release $version" ./nuget-output/*
