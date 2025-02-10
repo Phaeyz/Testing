@@ -19,6 +19,8 @@ jobs:
   create-version-tag:
     needs: build-and-test
     uses: ./.github/workflows/lib-create-version-tag.yml
+    permissions:
+      contents: write
     with:
       breaking-change: ${{ github.event.inputs.breaking-change == 'true' }}
       new-feature: ${{ github.event.inputs.new-feature == 'true' }}
@@ -26,6 +28,8 @@ jobs:
   create-and-release-nuget:
     needs: create-version-tag
     uses: ./.github/workflows/lib-create-and-release-nuget.yml
+    permissions:
+      contents: write
     with:
       package-name: 'Phaeyz.Testing'
       version: ${{ needs.create-version-tag.outputs.version }}
