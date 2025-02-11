@@ -1,6 +1,9 @@
 name: Publish NuGet
 description: Publishes the most recently released NuGet files.
 inputs:
+  github-token:
+    description: 'GitHub Token'
+    required: true
   nuget-api-key:
     description: 'NuGet API Key'
     required: true
@@ -8,6 +11,8 @@ runs:
   using: "composite"
   steps:
     - name: Download Release Assets
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
       shell: bash
       run: |
         releaseAssets=$(gh release view --json assets --jq '.assets[].name')
