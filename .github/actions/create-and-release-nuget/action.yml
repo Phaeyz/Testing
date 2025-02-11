@@ -37,4 +37,4 @@ runs:
     shell: bash
     run: |
       version=${{ steps.compute_version.outputs.version }}
-      gh release create $version --title "Release $version" ./nuget-output/*
+      gh release create $version --generate-notes --title "Release $version" ./nuget-output/*
