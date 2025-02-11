@@ -1,0 +1,23 @@
+name: Checkout
+description: Checks out the repository (if it is not already checked out).
+runs:
+  using: "composite"
+  steps:
+    - name: Check Repository Status
+      id: check_checkout_status
+      shell: bash
+      run: |
+        if [ ! -d ".git" ]; then
+          echo "Repository not checked out, performing checkout."
+          echo "checkout_needed=true" >> $GITHUB_OUTPUT
+        else
+          echo "Repository already checked out."
+          echo "checkout_needed=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Checkout Repository
+      if: steps.check_checkout_status.outputs.checkout_needed == 'true'
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        filter: tree:0
