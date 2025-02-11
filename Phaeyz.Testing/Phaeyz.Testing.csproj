@@ -8,6 +8,7 @@
 
   <PropertyGroup>
     <PackageId>Phaeyz.Testing</PackageId>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Authors>Phaeyz</Authors>
     <Company>Phaeyz</Company>
     <Product>Phaeyz</Product>
