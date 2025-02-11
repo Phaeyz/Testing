@@ -13,6 +13,6 @@ jobs:
         fetch-depth: 0
         filter: tree:0
     - name: Publish NuGet
-      uses: ./.github/actions/nuget-api-key
+      uses: ./.github/actions/publish-nuget
       with:
         nuget-api-key: ${{ secrets.NuGetApiKey }}

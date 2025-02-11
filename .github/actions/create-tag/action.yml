@@ -11,6 +11,8 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Checkout Repository
+      uses: ./.github/actions/checkout
     - name: Create Tag
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}

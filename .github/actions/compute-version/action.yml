@@ -14,6 +14,8 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: Checkout Repository
+      uses: ./.github/actions/checkout
     - name: Install MinVer CLI
       uses: ./.github/actions/install-minver-cli
     - name: Compute Version
