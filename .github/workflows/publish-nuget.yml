@@ -15,4 +15,5 @@ jobs:
     - name: Publish NuGet
       uses: ./.github/actions/publish-nuget
       with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         nuget-api-key: ${{ secrets.NuGetApiKey }}
