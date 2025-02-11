@@ -1,0 +1,23 @@
+name: Publish NuGet
+description: Publishes the most recently released NuGet files.
+inputs:
+  nuget-api-key:
+    description: 'NuGet API Key'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Download Release Assets
+      shell: bash
+      run: |
+        releaseAssets=$(gh release view --json assets --jq '.assets[].name')
+        for asset in $releaseAssets; do
+          gh release download -p "$asset" -D ./nuget-output
+        done
+    - name: Publish to NuGet
+      shell: bash
+      run: |
+        nugetApiKey=${{ inputs.nuget-api-key }}
+        for package in ./nuget-output/*.nupkg; do
+          dotnet nuget push "$package" --api-key $nugetApiKey --source https://api.nuget.org/v3/index.json
+        done
