@@ -3,6 +3,8 @@ description: Builds and tests the project.
 runs:
   using: "composite"
   steps:
+  - name: Checkout Repository
+    uses: ./.github/actions/checkout
   - name: Install .NET
     uses: ./.github/actions/install-dotnet
   - name: Install Dependencies
