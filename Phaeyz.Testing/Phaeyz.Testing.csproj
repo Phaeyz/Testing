@@ -9,6 +9,7 @@
   <PropertyGroup>
     <PackageId>Phaeyz.Testing</PackageId>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
     <Authors>Phaeyz</Authors>
     <Company>Phaeyz</Company>
     <Product>Phaeyz</Product>
