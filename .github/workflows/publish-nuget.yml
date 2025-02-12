@@ -7,11 +7,6 @@ jobs:
   publish-nuget:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        filter: tree:0
     - name: Publish NuGet
       uses: Phaeyz/CICD/.github/actions/publish-nuget@main
       with:
