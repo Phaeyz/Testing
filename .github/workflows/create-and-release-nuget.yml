@@ -19,11 +19,6 @@ jobs:
   create-and-release-nuget:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        filter: tree:0
     - name: Create and Release NuGet
       uses: Phaeyz/CICD/.github/actions/create-and-release-nuget@main
       with:
