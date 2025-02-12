@@ -25,7 +25,7 @@ jobs:
         fetch-depth: 0
         filter: tree:0
     - name: Create and Release NuGet
-      uses: ./.github/actions/create-and-release-nuget
+      uses: Phaeyz/CICD/.github/actions/create-and-release-nuget@main
       with:
         breaking-change: ${{ inputs.breaking-change }}
         new-feature: ${{ inputs.new-feature }}

@@ -19,4 +19,4 @@ jobs:
         fetch-depth: 0
         filter: tree:0
     - name: Build and Test
-      uses: ./.github/actions/build-and-test
+      uses: Phaeyz/CICD/.github/actions/build-and-test@main
